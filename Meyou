@@ -306,6 +306,45 @@ getgenv().ToTargets = function(p)
 	    end)
     end)
 end
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = game.Players.LocalPlayer
+local HRP = LocalPlayer.Character.HumanoidRootPart
+function get_dis(pos)
+    return (HRP.Position-pos).Magnitude
+end
+function tween_to(pos)
+    pcall(function()
+        local dis = get_dis(pos)
+        local T
+        if dis < 440 then
+            T = dis/440
+        elseif dis < 750 then
+            T = dis/370
+        else
+            T = dis/350
+        end
+        local T_info = TweenInfo.new(T,Enum.EasingStyle.Linear)
+        local TW = TweenService:Create(HRP, T_info, { CFrame = CFrame.new(pos) })
+        TW:Play()
+        TW.Completed:wait()
+    end)
+end    
+
+
+
+function toTarget(targetPos, targetCFrame)
+    local tweenfunc = {}
+    local tween_s = game:service"TweenService"
+    local info = TweenInfo.new((targetPos - game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).Magnitude/300, Enum.EasingStyle.Linear)
+    local tween = tween_s:Create(game:GetService("Players").LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = targetCFrame * CFrame.fromAxisAngle(Vector3.new(1,0,0), math.rad(0))})
+    tween:Play()
+    function tweenfunc:Stop()
+        tween:Cancel()
+        return tween
+    end
+    if not tween then return tween end
+    return tweenfunc
+end
 
 function GetDistance(target)
     return math.floor((target.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude)
@@ -883,7 +922,7 @@ do
 		end
     end)
 
-	local ToggleBring = Tabs.SubFarming:AddToggle("BringMon", {Title = "BringMon", Default = false })
+	local ToggleBring = Tabs.SubFarming:AddToggle("BringMon", {Title = "BringMon", Default = true })
     ToggleBring:OnChanged(function(Value)
         _G.BringMonster = Value
     end)
