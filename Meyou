@@ -875,7 +875,8 @@ do
 
     local ToggleBone = Tabs.Main:AddToggle("ToggleBone", {Title = "Auto Bone", Default = false })
     ToggleBone:OnChanged(function(Value)
-        _G._G.Auto_Bone = Value
+        _G.Auto_Bone = Value
+        StopTween(_G.Auto_Bone)
     end)
     Options.ToggleBone:SetValue(false)
      
@@ -896,7 +897,7 @@ do
                                         v.Head.CanCollide = false 
                                         StartMagnetBoneMon = true
                                         PosMonBone = v.HumanoidRootPart.CFrame
-                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(2,20,2))
+                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(25,20,0))
                                         game:GetService("VirtualUser"):CaptureController()
                                         game:GetService("VirtualUser"):Button1Down(Vector2.new(1280,672))
                                     until not _G.Auto_Bone or not v.Parent or v.Humanoid.Health <= 0
@@ -926,6 +927,7 @@ do
 	local ToggleDought = Tabs.Main:AddToggle("ToggleDought", {Title = "AutoDoughtBoss", Default = false })
     ToggleDought:OnChanged(function(Value)
         _G.AutoDoughtBoss = Value
+        StopTween(_G.AutoDoughtBoss)
     end)
     Options.ToggleDought:SetValue(false)
     spawn(function()
@@ -943,7 +945,7 @@ do
                                         v.HumanoidRootPart.CanCollide = false
                                         v.Humanoid.WalkSpeed = 0
                                         v.HumanoidRootPart.Size = Vector3.new(50,50,50)
-                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(PosX,PosY,PosZ))
+                                        topos(v.HumanoidRootPart.CFrame * CFrame.new(25,20,0))
                                         game:GetService("VirtualUser"):CaptureController()
                                         game:GetService("VirtualUser"):Button1Down(Vector2.new(1280,672))
                                         sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",math.huge)
@@ -971,7 +973,7 @@ do
                                                     v.HumanoidRootPart.Size = Vector3.new(50,50,50)
                                                     MagnetDought = true
                                                     PosMonDoughtOpenDoor = v.HumanoidRootPart.CFrame
-                                                    topos(v.HumanoidRootPart.CFrame * CFrame.new(PosX,PosY,PosZ))
+                                                    topos(v.HumanoidRootPart.CFrame * CFrame.new(25,20,0))
                                                     game:GetService("VirtualUser"):CaptureController()
                                                     game:GetService("VirtualUser"):Button1Down(Vector2.new(1280,672))
                                                 until not _G.AutoDoughtBoss or not v.Parent or v.Humanoid.Health <= 0 or game:GetService("Workspace").Map.CakeLoaf.BigMirror.Other.Transparency == 0 or game:GetService("ReplicatedStorage"):FindFirstChild("Cake Prince [Lv. 2300] [Raid Boss]") or game:GetService("Workspace").Enemies:FindFirstChild("Cake Prince [Lv. 2300] [Raid Boss]") or KillMob == 0
@@ -1050,7 +1052,25 @@ do
 			end)
 		end
 	end)
+    
+    local Togglerejoin = Tabs.SubFarming:AddToggle("rejoin", {Title = "Auto rejoin", Default = true })
+    Togglerejoin:OnChanged(function(Value)
+        _G.Rejoin = Value
+    end)
+    Options.Togglerejoin:SetValue(false)
+    
 
+    spawn(function()
+        while wait() do
+            if _G.Rejoin then
+                getgenv().rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+                    if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+                        game:GetService("TeleportService"):Teleport(game.PlaceId)
+                    end
+                end)
+            end
+        end
+    end)
     
     local Slider = Tabs.Main:AddSlider("Slider", {
         Title = "Slider",
