@@ -923,11 +923,11 @@ do
         end
     end)
 
-	local ToggleCake = Tabs.Main:AddToggle("ToggleCake", {Title = "Auto Cake Prince", Default = false })
-    ToggleCake:OnChanged(function(Value)
-        _G.CakePrince = Value
+	local ToggleDought = Tabs.Main:AddToggle("ToggleDought", {Title = "AutoDoughtBoss", Default = false })
+    ToggleDought:OnChanged(function(Value)
+        _G.AutoDoughtBoss = Value
     end)
-    Options.ToggleCake:SetValue(false)
+    Options.ToggleDought:SetValue(false)
     spawn(function()
         while wait() do
             if _G.AutoDoughtBoss then
